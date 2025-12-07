@@ -1,14 +1,20 @@
 import streamlit as st
 import requests
+from dotenv import load_dotenv
+import os
 
 # CONFIGURATION (Replace with your details!)
-GITHUB_TOKEN = "PASTE_YOUR_TOKEN_HERE"  # <--- PASTE TOKEN FROM STEP 3.3
-REPO_OWNER = "YOUR_GITHUB_USERNAME"  # <--- YOUR USERNAME
-REPO_NAME = "api-testops-demo"  # <--- REPO NAME
+# 1. Load environment variables
+load_dotenv()
+
+# 2. Get secrets safely
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+REPO_OWNER = os.getenv("REPO_OWNER")
+REPO_NAME = os.getenv("REPO_NAME")
 
 st.title("🚀 API TestOps Control Plane")
 
-endpoint = st.text_input("Endpoint to Test", "/api/users/2")
+endpoint = st.text_input("Endpoint to Test", "/todos/1")
 
 if st.button("Trigger Cloud Test"):
     url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/workflows/main.yml/dispatches"
