@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       endpoint:
-        description: 'Endpoint to test'
+        description: 'Endpoint to test (e.g. /todos/1)'
         required: true
-        default: '/api/users/2'
+        default: '/todos/1'
 
 permissions:
   contents: write
@@ -28,9 +28,21 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run Tests
+        # Ensure the test continues even if bugs are found so we get the report
         continue-on-error: true
+        # We pass the input endpoint to Pytest
         run: |
           pytest test_api.py --endpoint="${{ inputs.endpoint }}" --alluredir=allure-results
+
+      # --- REPORTING STEPS ---
+
+      - name: Get Allure History
+        uses: actions/checkout@v3
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
 
       - name: Generate Report
         uses: simple-elf/allure-report-action@master
