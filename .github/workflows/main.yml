@@ -1,0 +1,49 @@
+name: TestOps Execution
+
+on:
+  workflow_dispatch:
+    inputs:
+      endpoint:
+        description: 'Endpoint to test'
+        required: true
+        default: '/api/users/2'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Tests
+        continue-on-error: true
+        run: |
+          pytest test_api.py --endpoint="${{ inputs.endpoint }}" --alluredir=allure-results
+
+      - name: Generate Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          allure_results: allure-results
+          allure_history: allure-history
+          keep_reports: 20
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
