@@ -1,0 +1,6 @@
+pytest
+allure-python-commons
+requests
+deepdiff
+allure-pytest
+streamlit
