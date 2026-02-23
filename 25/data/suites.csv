@@ -1,0 +1,2 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","222","Compare API Responses","tests","Mon Feb 23 19:01:25 UTC 2026","passed","Mon Feb 23 19:01:25 UTC 2026","","test_api","",""
